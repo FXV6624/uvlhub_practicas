@@ -59,4 +59,16 @@ jobs:
       env:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     
-    - name: Verify new 
+    - name: Check for outdated dependencies
+      run: pip list --outdated
+
+    - name: Verify Python 3.13 and 3.14 compatibility
+      run: |
+        pip install vermin
+        vermin -t=3.13 -t=3.14 app/
+
+    - name: Run security audit on dependencies
+      run: |
+        pip install pip-audit
+        pip-audit -r requirements.txt
+
